@@ -87,6 +87,7 @@ int playgame() {
 
 	//se le pregunta si desea volver a jugar o salir al menu
 	cout << "desea volver a jugar? si/ no ";
+	tries = 0;
 	cin >> playing;
 	} while (playing == "si");
 	return 0;
