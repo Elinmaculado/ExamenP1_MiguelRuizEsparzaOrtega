@@ -1,6 +1,246 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cctype>
+#include <string>
+using namespace std;
+
+void instructions();
+char PlayerSymbol(string question);
+char Opponent(char a);
+char winner(const vector<char>& board);
+void displayBoard(vector <char>& board);
+int playerMove(vector <char>& board);
+
+void ejercicio1();
+void ejercicio2();
+
+const int NUM_SQUARES = 9;
+const char EMPTY = '.';
+
+const char X = 'X';
+const char O = 'O';
+const char NO_ONE = 'N';
+const char TIE = 'T';
+
+int main()
+{
+	int ejercicio;
+	cout << "elija si quiere ver el ejercicio 1 o 2" << endl;
+	cin >> ejercicio;
+	if (ejercicio == 1)
+	{
+		ejercicio1();
+	}
+	if (ejercicio == 2)
+	{
+		ejercicio2();
+	}
+	else
+	{
+		cout << "opcion invalida, mataste el programa" << endl;
+	}
+}
+
+void ejercicio1()
+{
+	vector<char> board(NUM_SQUARES, EMPTY);
+	int move = 0;
+	char player = X;
+	char ai = O;
+	char turn = player;
+	instructions();
+	displayBoard(board);
+	cout << endl;
+	player = PlayerSymbol("deseas ir primero? ");
+	cout << "jugador " << player << endl;
+	ai = Opponent(player);
+	cout << "oponente " << ai << endl;
+}
+
+void ejercicio2()
+{
+	int sumaNum = 0;
+	int sumaPos = 0;
+	int resta;
+
+	int matriz[3][4] = { { 2, 3, 1, 4 },
+						{9, 8, 7, 9},
+						{3, 2, 1, 5} };
+
+	//for para imprimir matriz
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout << matriz[i][j];
+		}
+		cout << endl;
+	}
+
+	cout << "numeros pares y su suma" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (matriz[i][j] % 2 == 0)
+			{
+				cout << matriz[i][j] << " + ";
+				sumaNum += matriz[i][j];
+			}
+		}
+	}
+	cout << " = " << sumaNum << endl;
+
+	cout << "suma de posiciones" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (matriz[i][j] % 2 == 0)
+			{
+				cout << i << j << " + ";
+				sumaPos += ((i * 10) + j);
+			}
+		}
+	}
+	cout << " = " << sumaPos << endl;
+
+	cout << "resta final" << endl;
+
+	resta = sumaNum - sumaPos;
+
+	cout << sumaNum << " - " << sumaPos << " = " << resta;
+}
+
+int playerMove(vector <char>& board)
+{
+	int choice;
+	do {
+		cin >> choice;
+	} while (board[choice] == '.');
+	return choice;
+}
+
+void displayBoard(vector <char>& board)
+{
+	cout << "Bienvenido a tic tac toe, elije una posicion entre el 0 y el 8" << endl;
+
+	cout << board[0] << " " << board[1] << " " << board[2] << endl;
+	cout << board[3] << " " << board[4] << " " << board[5] << endl;
+	cout << board[6] << " " << board[7] << " " << board[8] << endl;
+}
+
+void instructions()
+{
+	char boardoptions[3][3] = { {'0', '1', '2'},
+										 {'3', '4', '5'},
+										 {'6', '7', '8'} };
+
+	cout << "Bienvenido a un nuevo TicTacToe" << endl;
+	cout << "En este juego te enfrentaras a una IA basica" << endl;
+	cout << "El tablero siguiente representa tus controles, recuerdalos bien" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cout << boardoptions[i][j];
+		}
+		cout << endl;
+	}
+}
+
+char PlayerSymbol(string question)
+{
+	string choice;
+	unsigned int answer;
+	//se obtiene numero aleatorio entre el 1 y el 6 para el dado
+	srand(static_cast<unsigned int>(time(0)));
+	answer = 1 + rand() % (6 - 1);
+	cout << "desea numero par o numero impar?" << endl;
+	cout << "numero: " << answer << endl;
+	cin >> choice;
+
+	if (choice == "par")
+	{
+		if (answer % 2 == 0)
+		{
+			return X;
+		}
+		else
+		{
+			return O;
+		}
+	}
+	else if (choice == "impar")
+	{
+		if (answer % 2 == 0)
+		{
+			return O;
+		}
+		else
+		{
+			return X;
+		}
+	}
+
+	
+}
+
+char Opponent(char a)
+{
+	char opponent;
+
+	if (a == X)
+	{
+		opponent = O;
+	}
+	else
+	{
+		opponent = X;
+	}
+
+	return opponent;
+}
+
+char winner(const vector<char>& board)
+{
+
+	//This are the posibilities to win
+	const int WINNING_POS[8][3] = { {0, 1, 2}, //Horizontal
+									{3, 4, 5}, //Horizontal
+									{6, 7, 8}, //Horizontal
+									{0, 3, 6}, //Vertical
+									{1, 4, 7}, //Vertical
+									{2, 5, 8}, //Vertical
+									{2, 4, 6}, //Horizontal
+									{0, 4, 8} }; //Horizontal
+	const int TOTAL_ROWS = 8;
+
+	//Return the winner
+	for (int row = 0; row < TOTAL_ROWS; row++)
+	{
+		if ((board[WINNING_POS[row][0]] != EMPTY) &&
+			(board[WINNING_POS[row][0]] == board[WINNING_POS[row][1]]) &&
+			(board[WINNING_POS[row][1]] == board[WINNING_POS[row][2]]))
+		{
+			return board[WINNING_POS[row][0]];
+		}
+	}
+
+	//Return a Tie
+	if (count(board.begin(), board.end(), EMPTY) == 0) {
+		return TIE;
+	}
+
+	//Return that no one is the winner yet
+	return NO_ONE;
+}
+
+
+/*#include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 int playgame();
 int parcial1();
@@ -214,3 +454,4 @@ void parcial2()
 	} while (b < 10);
 	cout << "hasta la proxima";
 }
+*/
